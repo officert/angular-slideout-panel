@@ -1,0 +1,103 @@
+.angular-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1000;
+}
+.angular-panel .angular-panel-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, .5);
+  transition: opacity 0.2s;
+  opacity: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* ---------- OPEN ---------- */
+
+.angular-panel .angular-panel-bg.open {
+  opacity: 1;
+}
+
+/* ---------- CLOSE ---------- */
+
+.angular-panel .angular-panel-bg.close {
+  opacity: 0;
+}
+
+/* ---------- OPEN-RIGHT ---------- */
+
+.angular-panel .angular-panel-bg.angular-panel-open-right .angular-panel-dialog {
+  right: -40%;
+}
+.angular-panel .angular-panel-bg.angular-panel-open-right.open .angular-panel-dialog {
+  right: 0;
+}
+
+/* ---------- OPEN-LEFT ---------- */
+
+.angular-panel .angular-panel-bg.angular-panel-open-left .angular-panel-dialog {
+  left: -40%;
+}
+.angular-panel .angular-panel-bg.angular-panel-open-left.open .angular-panel-dialog {
+  left: 0;
+}
+.angular-panel .angular-panel-bg .angular-panel-dialog {
+  height: 100%;
+  width: 40%;
+  position: fixed;
+  top: 0;
+  margin: 0;
+  transition: .4s;
+  transition-delay: .4s;
+  background: #FFFFFF;
+  z-index: 1001;
+}
+.angular-panel .angular-panel-bg .angular-panel-dialog .angular-panel-header {
+  position: relative;
+  padding: 10px 10px 7px 20px;
+  border-bottom: 1px solid @gray-border;
+  color: @gray-light;
+  text-transform: uppercase;
+  .angular-panel-close {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background: #fff;
+    border-top-right-radius: 6px;
+    border: 1px solid @gray-border;
+    border-bottom-width: 0;
+    border-top: none;
+    border-right: none;
+    z-index: @modal-z-index + 1;
+    padding: 8px;
+    &:hover {
+      background: @gray-hover;
+    }
+    a {
+      display: block;
+    }
+  }
+}
+.angular-panel .angular-panel-bg .angular-panel-dialog .angular-panel-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: none;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: -5px 0px 9px 0px rgba(0, 0, 0, .2);
+  padding: 15px;
+}

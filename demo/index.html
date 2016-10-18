@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="demoApp">
+
+<head>
+  <title>Angular Bootstrap Panel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+  <script src="../release/js/angular-slide-out-panel.min.js"></script>
+  <script src="./demoApp.js"></script>
+  <script src="./demoController.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="../release/css/angular-slide-out-panel.min.css">
+</head>
+
+<body>
+  <div id="demo" class="container clearfix" ng-controller="demoController">
+    <button class="btn btn-default pull-left" ng-click="openPanel1()">
+      Open a panel on left side
+    </button>
+
+    <button class="btn btn-default pull-right" ng-click="openPanel2()">
+      Open a panel on right side
+    </button>
+  </div>
+</body>
+
+</html>
