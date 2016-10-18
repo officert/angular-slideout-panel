@@ -1,3 +1,5 @@
+/* -------------------- Angular Panel -------------------- */
+
 .angular-panel {
   position: fixed;
   top: 0;
@@ -7,6 +9,9 @@
   overflow: hidden;
   z-index: 1000;
 }
+
+/* -------------------- Angular Panel BG -------------------- */
+
 .angular-panel .angular-panel-bg {
   position: absolute;
   top: 0;
@@ -26,12 +31,6 @@
   opacity: 1;
 }
 
-/* ---------- CLOSE ---------- */
-
-.angular-panel .angular-panel-bg.close {
-  opacity: 0;
-}
-
 /* ---------- OPEN-RIGHT ---------- */
 
 .angular-panel .angular-panel-bg.angular-panel-open-right .angular-panel-dialog {
@@ -49,43 +48,33 @@
 .angular-panel .angular-panel-bg.angular-panel-open-left.open .angular-panel-dialog {
   left: 0;
 }
+
+/* -------------------- Angular Panel Dialog -------------------- */
+
 .angular-panel .angular-panel-bg .angular-panel-dialog {
   height: 100%;
   width: 40%;
   position: fixed;
   top: 0;
   margin: 0;
-  transition: .4s;
+  transition-duration: .4s;
   transition-delay: .4s;
   background: #FFFFFF;
   z-index: 1001;
 }
+
+/* -------------------- Angular Panel Dialog - Header -------------------- */
+
 .angular-panel .angular-panel-bg .angular-panel-dialog .angular-panel-header {
   position: relative;
   padding: 10px 10px 7px 20px;
   border-bottom: 1px solid @gray-border;
   color: @gray-light;
   text-transform: uppercase;
-  .angular-panel-close {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    background: #fff;
-    border-top-right-radius: 6px;
-    border: 1px solid @gray-border;
-    border-bottom-width: 0;
-    border-top: none;
-    border-right: none;
-    z-index: @modal-z-index + 1;
-    padding: 8px;
-    &:hover {
-      background: @gray-hover;
-    }
-    a {
-      display: block;
-    }
-  }
 }
+
+/* -------------------- Angular Panel Dialog - Content -------------------- */
+
 .angular-panel .angular-panel-bg .angular-panel-dialog .angular-panel-content {
   position: absolute;
   height: 100%;
@@ -93,7 +82,7 @@
   overflow-y: auto;
   top: 0;
   left: 0;
-  background-color: #fff;
+  background-color: #FFFFFF;
   background-clip: padding-box;
   border: none;
   border-radius: 0;

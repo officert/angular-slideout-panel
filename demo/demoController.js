@@ -4,7 +4,7 @@ angular.module('demoApp').controller('demoController', [
   function($scope, angularSlideOutPanel) {
     var template = '<div class="">' +
       '<h1>Test Modal!!</h1>' +
-      '<button class="btn btn-primary" ng-click="modalController">Hello There</button>' +
+      '<button class="btn btn-primary" ng-click="helloThere()">Hello There</button>' +
       '<br>' +
       '<br>' +
       '<p>' +
@@ -56,7 +56,10 @@ angular.module('demoApp').controller('demoController', [
       let panelInstance = angularSlideOutPanel.open({
         template: template,
         openOn: 'right',
-        controller: modalController
+        controller: [
+          '$scope',
+          modalController
+        ]
       });
     };
 

@@ -4,7 +4,9 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   '$timeout',
   '$http',
   '$compile',
-  ($q, $rootScope, $timeout, $http, $compile) => {
+  '$controller',
+  'angularSlideOutPanelStack',
+  ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack) => {
     class AngularSlideOutPanel {
       /**
        * @param {Object} [options]
@@ -26,6 +28,10 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         templatePromise
           .then(template => {
             _createPanel(template, options);
+            //TODO: create panel should return a Panel instance - which can be used to close the Panel
+            // .then(panel => {
+            //   angularSlideOutPanelStack._addPanel(panel);
+            // });
           });
       }
     }
@@ -54,9 +60,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     }
 
     function _getControllerScope(controller) {
-      //TODO: if it's string then instantiate the controller, otherwise we should have a controller instance, back up to the $rootScope
+      let newScope = $rootScope.$new();
 
-      return $rootScope.$new();
+      $controller(controller, {
+        $scope: newScope
+      });
+
+      return newScope;
     }
 
     /**
@@ -117,7 +127,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
     function closeModalElements(modalElement, modalBgElement) {
       $timeout(() => {
-        modalBgElement.addClass('close');
+        modalBgElement.removeClass('open');
       });
 
       $timeout(() => {
