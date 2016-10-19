@@ -1,7 +1,7 @@
 {
-  "name": "@tablelist/angular-bootstrap-panel",
+  "name": "@tablelist/angular-slideout-panel",
   "version": "0.0.1",
-  "description": "Angular Bootstrap Panels",
+  "description": "Angular Slideout Panel",
   "main": "gulpfile.js",
   "scripts": {
     "test": "npm test"

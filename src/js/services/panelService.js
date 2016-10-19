@@ -175,6 +175,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss('backdrop click');
       });
+
       bodyElement.on('keydown keypress', event => { //close the modal on escape keypress
         if (event.which === 27) { // 27 = esc key
           event.preventDefault();

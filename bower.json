@@ -1,0 +1,16 @@
+{
+  "name": "Angular Slideout Panel",
+  "description": "Angular Slideout Panel",
+  "main": "gulpfile.js",
+  "authors": [
+    "Tablelist"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "panels",
+    "modals"
+  ],
+  "homepage": "https://github.com/tablelist/angular-slideout-panel"
+}
