@@ -1,6 +1,6 @@
 {
   "name": "angular-slideout-panel",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Angular Slideout Panel",
   "main": "gulpfile.js",
   "authors": [
@@ -16,5 +16,11 @@
   "homepage": "https://github.com/tablelist/angular-slideout-panel",
   "dependencies": {
     "angular": "1.5.8"
-  }
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src"
+  ]
 }
