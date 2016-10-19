@@ -6,7 +6,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   '$compile',
   '$controller',
   'angularSlideOutPanelStack',
-  ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack) => {
+  'panelResolve',
+  ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack, panelResolve) => {
     class AngularSlideOutPanel {
       /**
        * @param {Object} [options]
@@ -20,18 +21,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
         options.openOn = (options.openOn && (options.openOn === 'right' || options.openOn === 'left')) ? options.openOn : 'left';
 
-        //TODO: handle errors getting templates,
-
-        let panelInstance = _createPanel(options);
-
-        let templatePromise = options.templateUrl ? _getTemplate(options.templateUrl) : $q.resolve(options.template);
-
-        templatePromise
-          .then(template => {
-            panelInstance._init(template);
-          });
-
-        return panelInstance;
+        return _createPanel(options);
       }
     }
 
@@ -41,6 +31,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        * @param {String} [options.templateUrl]
        * @param {String} [options.template]
        * @param {String} [options.openOn]
+       * @param {Object} [options.resolve]
        * @param {String|Function|Array} [options.controller]
        */
       constructor(options) {
@@ -53,23 +44,27 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         this.template = options.template;
         this.openOn = options.openOn;
         this.controller = options.controller;
+        this.resolve = options.resolve;
 
         this._elements = _createPanelElements({
           openOn: this.openOn,
           close: this.close.bind(this),
           dismiss: this.dismiss.bind(this)
         });
-      }
 
-      _init(template) {
-        let newScope = _getControllerScope(this.controller);
-        newScope.$panel = this; //add the Panel instance to the scope so it can be closed from whatever controller the user provides
+        _getControllerScope(this.templateUrl, this.template, this.controller, this.resolve)
+          .then(scopeAndTemplate => {
+            let scope = scopeAndTemplate.scope;
+            let template = scopeAndTemplate.template;
 
-        let compiledElement = _createTemplate(newScope, template);
+            scope.$panelInstance = this; //add the Panel instance to the scope so it can be closed from whatever controller the user provides
 
-        this._elements.modalContentElement.append(compiledElement);
+            let compiledElement = _createTemplate(scope, template);
 
-        openModalElements(this._elements.modalElement, this._elements.modalBgElement);
+            this._elements.modalContentElement.append(compiledElement);
+
+            openModalElements(this._elements.modalElement, this._elements.modalBgElement);
+          });
       }
 
       close(result) {
@@ -89,20 +84,47 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {Object} [options]
      * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
      */
-    function _createPanel(template, options) {
-      return new Panel(template, options);
+    function _createPanel(options) {
+      return new Panel(options);
     }
 
-    function _getControllerScope(controller) {
-      let newScope = $rootScope.$new();
+    /**
+     * @param {Object} controller
+     * @param {Object} resolve - hash of promises to resolve
+     */
+    function _getControllerScope(templateUrl, template, controller, resolve) {
+      let templatePromise = templateUrl ? _getTemplate(templateUrl) : $q.resolve(template);
 
-      let ctrlInstantiate = $controller(controller, {
-        $scope: newScope
-      }, true);
+      let templateAndResolvePromise = $q.all([
+        templatePromise,
+        panelResolve.resolve(resolve)
+      ]);
 
-      ctrlInstantiate();
+      return templateAndResolvePromise
+        .then(templateAndVars => {
+          let locals = {};
 
-      return newScope;
+          let newScope = $rootScope.$new();
+
+          locals.$scope = newScope;
+          locals.$scope.$resolve = {};
+
+          let resolves = templateAndVars[1];
+          angular.forEach(resolves, (value, key) => {
+            locals[key] = value;
+
+            locals.$scope.$resolve[key] = value;
+          });
+
+          let ctrlInstantiate = $controller(controller, locals, true);
+
+          ctrlInstantiate();
+
+          return $q.resolve({
+            scope: newScope,
+            template: templateAndVars[0]
+          });
+        });
     }
 
     /**

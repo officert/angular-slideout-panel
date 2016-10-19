@@ -9,6 +9,9 @@ angular.module('demoApp').controller('demoController', [
       '<button class="btn btn-primary" ng-click="dismissPanel()">Dismiss Me</button>' +
       '<br>' +
       '<br>' +
+      '<br>' +
+      'Resolved User : {{ user.firstName }}' +
+      '<br>' +
       '<p>' +
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies quam diam, quis tempor tellus posuere eu. Vestibulum ac massa rhoncus tellus aliquet lobortis id non tortor. Vestibulum at imperdiet justo. Mauris at dolor ultricies, vestibulum' +
       'lectus sit amet, ultricies erat. Nunc varius turpis vel vestibulum efficitur. Vestibulum elementum leo quis erat pulvinar tincidunt. Nulla eget purus ultrices, vehicula massa quis, fringilla ex. Nam tincidunt finibus quam id laoreet. Maecenas ac eleifend' +
@@ -47,15 +50,24 @@ angular.module('demoApp').controller('demoController', [
       '</div>';
 
     $scope.openPanel1 = function() {
-      var panelInstance1 = angularSlideOutPanel.open({
+      angularSlideOutPanel.open({
         template: template,
         openOn: 'left',
-        controller: modalController
+        controller: [
+          '$scope',
+          'user',
+          modalController
+        ],
+        resolve: {
+          user: [
+            function() {
+              return {
+                firstName: 'Jerry'
+              };
+            }
+          ]
+        }
       });
-
-      $timeout(function() {
-        panelInstance1.close();
-      }, 1000);
     };
 
     $scope.openPanel2 = function() {
@@ -64,29 +76,38 @@ angular.module('demoApp').controller('demoController', [
         openOn: 'right',
         controller: [
           '$scope',
+          'user',
           modalController
-        ]
+        ],
+        resolve: {
+          user: [
+            function() {
+              return {
+                firstName: 'Jerry'
+              };
+            }
+          ]
+        }
       });
 
-      $timeout(function() {
-        // panelInstance2.close('yoyoyo');
-        panelInstance2.result
-          .then(function(result) {
-            console.log('panel was closed with result : ', result);
-          }).catch(function(error) {
-            console.log('panel was rejected with error : ', error);
-          });
-      }, 1000);
+      panelInstance2.result
+        .then(function(result) {
+          console.log('panel was closed with result : ', result);
+        }).catch(function(error) {
+          console.log('panel was rejected with error : ', error);
+        });
     };
 
-    function modalController($scope) {
+    function modalController($scope, user) {
       $scope.closePanel = function() {
-        $scope.$panel.close('this is from the controller!!');
+        $scope.$panelInstance.close('this is from the controller!!');
       };
 
       $scope.dismissPanel = function() {
-        $scope.$panel.dismiss('this is from the controller!!');
+        $scope.$panelInstance.dismiss('this is from the controller!!');
       };
+
+      $scope.user = user;
     }
   }
 ]);
