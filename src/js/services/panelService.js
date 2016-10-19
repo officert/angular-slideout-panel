@@ -93,7 +93,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {Object} resolve - hash of promises to resolve
      */
     function _getControllerScope(templateUrl, template, controller, resolve) {
-      let templatePromise = templateUrl ? _getTemplate(templateUrl) : $q.resolve(template);
+      let templatePromise = templateUrl ? _getTemplate(templateUrl) : $q.resolve({
+        data: template
+      });
+
+      templatePromise.then(response => {
+        return $q.resolve(response ? response.data : null);
+      });
 
       let templateAndResolvePromise = $q.all([
         templatePromise,
