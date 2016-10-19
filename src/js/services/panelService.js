@@ -96,9 +96,11 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     function _getControllerScope(controller) {
       let newScope = $rootScope.$new();
 
-      $controller(controller, {
+      let ctrlInstantiate = $controller(controller, {
         $scope: newScope
-      });
+      }, true);
+
+      ctrlInstantiate();
 
       return newScope;
     }
