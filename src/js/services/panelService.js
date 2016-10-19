@@ -21,18 +21,67 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         options.openOn = (options.openOn && (options.openOn === 'right' || options.openOn === 'left')) ? options.openOn : 'left';
 
         //TODO: handle errors getting templates,
-        //TODO: return promise with PanelInstance object
+
+        let panelInstance = _createPanel(options);
 
         let templatePromise = options.templateUrl ? _getTemplate(options.templateUrl) : $q.resolve(options.template);
 
         templatePromise
           .then(template => {
-            _createPanel(template, options);
-            //TODO: create panel should return a Panel instance - which can be used to close the Panel
-            // .then(panel => {
-            //   angularSlideOutPanelStack._addPanel(panel);
-            // });
+            panelInstance._init(template);
           });
+
+        return panelInstance;
+      }
+    }
+
+    class Panel {
+      /**
+       * @param {Object} options
+       * @param {String} [options.templateUrl]
+       * @param {String} [options.template]
+       * @param {String} [options.openOn]
+       * @param {String|Function|Array} [options.controller]
+       */
+      constructor(options) {
+        if (!options) throw new Error('Panel - constructor() - options is required');
+
+        this._deferred = $q.defer();
+        this.result = this._deferred.promise;
+
+        this.templateUrl = options.templateUrl;
+        this.template = options.template;
+        this.openOn = options.openOn;
+        this.controller = options.controller;
+
+        this._elements = _createPanelElements({
+          openOn: this.openOn,
+          close: this.close.bind(this),
+          dismiss: this.dismiss.bind(this)
+        });
+      }
+
+      _init(template) {
+        let newScope = _getControllerScope(this.controller);
+        newScope.$panel = this; //add the Panel instance to the scope so it can be closed from whatever controller the user provides
+
+        let compiledElement = _createTemplate(newScope, template);
+
+        this._elements.modalContentElement.append(compiledElement);
+
+        openModalElements(this._elements.modalElement, this._elements.modalBgElement);
+      }
+
+      close(result) {
+        closeModalElements(this._elements.modalElement, this._elements.modalBgElement);
+
+        this._deferred.resolve(result);
+      }
+
+      dismiss(reason) {
+        closeModalElements(this._elements.modalElement, this._elements.modalBgElement);
+
+        this._deferred.reject(reason);
       }
     }
 
@@ -41,22 +90,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
      */
     function _createPanel(template, options) {
-      let elements = _createPanelElements(options);
-
-      let newScope = _getControllerScope(options.controller);
-
-      // let panelOptions = {};
-      //
-      // //add a closeModal function to the directive's scope so the modal can be programatically closed by the directive's code
-      // panelOptions.closeModal = function() {
-      //   elements.modalElement.remove();
-      // };
-
-      let compiledElement = _createTemplate(newScope, template);
-
-      elements.modalContentElement.append(compiledElement);
-
-      openModalElements(elements.modalElement, elements.modalBgElement);
+      return new Panel(template, options);
     }
 
     function _getControllerScope(controller) {
@@ -72,6 +106,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     /**
      * @param {Object} [options]
      * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
+     * @param {Function} [options.close] - close the modal and resolve the promise
+     * @param {Function} [options.dismiss] - close the modal and reject the promise
      */
     function _createPanelElements(options) {
       options = options || {};
@@ -79,12 +115,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       let modalElement = angular.element(document.createElement('div'));
       modalElement.addClass('angular-panel');
 
-      let modalBgElement = angular.element(document.createElement('div'));
-      modalBgElement.addClass('angular-panel-bg');
-      modalBgElement.addClass('angular-panel-open-' + options.openOn);
-      modalBgElement.on('click', () => { //close the modal on backgroup clicks
-        closeModalElements(modalElement, modalBgElement);
-      });
+      let modalBgElement = getOrCreateModalBgElement(modalElement, options);
 
       let modalDialogElement = angular.element(document.createElement('div'));
       modalDialogElement.addClass('angular-panel-dialog');
@@ -95,13 +126,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       let modalContentElement = angular.element(document.createElement('div'));
       modalContentElement.addClass('angular-panel-content');
 
-      let modalCloseElement = angular.element(document.createElement('div'));
-      modalCloseElement.addClass('angular-panel-close');
-      modalCloseElement.on('click', (event) => { //close the modal on close button click
-        if (event) event.preventDefault();
-
-        closeModalElements(modalElement, modalBgElement);
-      });
+      // let modalCloseElement = angular.element(document.createElement('div'));
+      // modalCloseElement.addClass('angular-panel-close');
+      // modalCloseElement.on('click', (event) => { //close the modal on close button click
+      //   if (event) event.preventDefault();
+      //
+      //   if (options.dismiss) options.dismiss('backdrop click');
+      // });
 
       let modalCloseAElement = angular.element(document.createElement('a'));
       modalCloseAElement.attr('href', '#');
@@ -123,6 +154,28 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         modalElement,
         modalContentElement
       };
+    }
+
+    /**
+     * @param {DOMElement} modalElement
+     * @param {Object} [options]
+     * @param {String} [options.openOn] - direction to open the panel
+     */
+    function getOrCreateModalBgElement(modalElement, options) {
+      options = options || {};
+
+      let existingModalBgElement = document.querySelector('.angular-panel-bg');
+
+      if (existingModalBgElement) return existingModalBgElement;
+
+      let modalBgElement = angular.element(document.createElement('div'));
+      modalBgElement.addClass('angular-panel-bg');
+      modalBgElement.addClass('angular-panel-open-' + options.openOn);
+      modalBgElement.on('click', () => { //close the modal on backgroup clicks
+        if (options.dismiss) options.dismiss('backdrop click');
+      });
+
+      return modalBgElement;
     }
 
     function closeModalElements(modalElement, modalBgElement) {

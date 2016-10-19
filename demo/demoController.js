@@ -1,10 +1,12 @@
 angular.module('demoApp').controller('demoController', [
   '$scope',
   'angularSlideOutPanel',
-  function($scope, angularSlideOutPanel) {
+  '$timeout',
+  function($scope, angularSlideOutPanel, $timeout) {
     var template = '<div class="">' +
       '<h1>Test Modal!!</h1>' +
-      '<button class="btn btn-primary" ng-click="helloThere()">Hello There</button>' +
+      '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
+      '<button class="btn btn-primary" ng-click="dismissPanel()">Dismiss Me</button>' +
       '<br>' +
       '<br>' +
       '<p>' +
@@ -45,15 +47,19 @@ angular.module('demoApp').controller('demoController', [
       '</div>';
 
     $scope.openPanel1 = function() {
-      let panelInstance = angularSlideOutPanel.open({
+      var panelInstance1 = angularSlideOutPanel.open({
         template: template,
         openOn: 'left',
         controller: modalController
       });
+
+      $timeout(function() {
+        panelInstance1.close();
+      }, 1000);
     };
 
     $scope.openPanel2 = function() {
-      let panelInstance = angularSlideOutPanel.open({
+      var panelInstance2 = angularSlideOutPanel.open({
         template: template,
         openOn: 'right',
         controller: [
@@ -61,11 +67,25 @@ angular.module('demoApp').controller('demoController', [
           modalController
         ]
       });
+
+      $timeout(function() {
+        // panelInstance2.close('yoyoyo');
+        panelInstance2.result
+          .then(function(result) {
+            console.log('panel was closed with result : ', result);
+          }).catch(function(error) {
+            console.log('panel was rejected with error : ', error);
+          });
+      }, 1000);
     };
 
     function modalController($scope) {
-      $scope.helloThere = function() {
-        alert('yoyoyoyyo');
+      $scope.closePanel = function() {
+        $scope.$panel.close('this is from the controller!!');
+      };
+
+      $scope.dismissPanel = function() {
+        $scope.$panel.dismiss('this is from the controller!!');
       };
     }
   }
