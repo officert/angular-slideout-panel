@@ -164,15 +164,23 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     function getOrCreateModalBgElement(modalElement, options) {
       options = options || {};
 
+      let bodyElement = angular.element(document.querySelector('body'));
       let existingModalBgElement = document.querySelector('.angular-panel-bg');
 
-      if (existingModalBgElement) return existingModalBgElement;
+      if (existingModalBgElement) return angular.element(existingModalBgElement);
 
       let modalBgElement = angular.element(document.createElement('div'));
       modalBgElement.addClass('angular-panel-bg');
       modalBgElement.addClass('angular-panel-open-' + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss('backdrop click');
+      });
+      bodyElement.on('keydown keypress', event => { //close the modal on escape keypress
+        if (event.which === 27) { // 27 = esc key
+          event.preventDefault();
+
+          if (options.dismiss) options.dismiss('escape key press');
+        }
       });
 
       return modalBgElement;
@@ -186,6 +194,10 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       $timeout(() => {
         modalElement.remove();
       }, 200);
+
+      let bodyElement = angular.element(document.querySelector('body'));
+
+      bodyElement.off('keydown keypress');
     }
 
     function openModalElements(modalElement, modalBgElement) {
