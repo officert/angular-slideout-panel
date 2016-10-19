@@ -97,10 +97,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         data: template
       });
 
-      templatePromise.then(response => {
-        return $q.resolve(response ? response.data : null);
-      });
-
       let templateAndResolvePromise = $q.all([
         templatePromise,
         panelResolve.resolve(resolve)
@@ -128,7 +124,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
           return $q.resolve({
             scope: newScope,
-            template: templateAndVars[0]
+            template: templateAndVars[0] ? templateAndVars[0].data : null
           });
         });
     }
