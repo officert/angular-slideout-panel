@@ -20,8 +20,8 @@ const UGLIFYOPTIONS = {
   }
 };
 
-const MINIFIED_JS = 'angular-slide-out-panel.min.js';
-const MINIFIED_CSS = 'angular-slide-out-panel.min.css';
+const MINIFIED_JS = 'angular-slideout-panel.min.js';
+const MINIFIED_CSS = 'angular-slideout-panel.min.css';
 
 const RELEASE = gulpUtil.env.release;
 const RELEASE_DIR = 'release';
