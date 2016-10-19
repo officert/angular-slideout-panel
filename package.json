@@ -1,6 +1,6 @@
 {
   "name": "@tablelist/angular-slideout-panel",
-  "version": "0.0.92",
+  "version": "0.0.93",
   "description": "Angular Slideout Panel",
   "main": "gulpfile.js",
   "scripts": {

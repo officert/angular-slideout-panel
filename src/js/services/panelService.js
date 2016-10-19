@@ -52,7 +52,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
           dismiss: this.dismiss.bind(this)
         });
 
-        _getControllerScope(this.templateUrl, this.template, this.controller, this.resolve)
+        _getControllerScope(this)
           .then(scopeAndTemplate => {
             let scope = scopeAndTemplate.scope;
             let template = scopeAndTemplate.template;
@@ -92,14 +92,14 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {Object} controller
      * @param {Object} resolve - hash of promises to resolve
      */
-    function _getControllerScope(templateUrl, template, controller, resolve) {
-      let templatePromise = templateUrl ? _getTemplate(templateUrl) : $q.resolve({
-        data: template
+    function _getControllerScope(panelInstance) {
+      let templatePromise = panelInstance.templateUrl ? _getTemplate(panelInstance.templateUrl) : $q.resolve({
+        data: panelInstance.template
       });
 
       let templateAndResolvePromise = $q.all([
         templatePromise,
-        panelResolve.resolve(resolve)
+        panelResolve.resolve(panelInstance.resolve)
       ]);
 
       return templateAndResolvePromise
@@ -110,6 +110,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
           locals.$scope = newScope;
           locals.$scope.$resolve = {};
+          locals.$panelInstance = panelInstance;
 
           let resolves = templateAndVars[1];
           angular.forEach(resolves, (value, key) => {
@@ -118,7 +119,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
             locals.$scope.$resolve[key] = value;
           });
 
-          let ctrlInstantiate = $controller(controller, locals, true);
+          let ctrlInstantiate = $controller(panelInstance.controller, locals, true);
 
           ctrlInstantiate();
 
