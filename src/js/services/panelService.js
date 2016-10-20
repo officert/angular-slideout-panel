@@ -15,23 +15,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       PANEL_CONTENT_ELEMENT: 'angular-panel-content'
     };
 
-    class AngularSlideOutPanel {
-      /**
-       * @param {Object} [options]
-       * @param {String} [options.templateUrl]
-       * @param {String} [options.template]
-       * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
-       */
-      open(options) {
-        if (!options) throw new Error('angularSlideOutPanel - open() - options is required');
-        if (!options.templateUrl && !options.template) throw new Error('angularSlideOutPanel - open() - options.templateUrl or options.template is required');
-
-        options.openOn = (options.openOn && (options.openOn === 'right' || options.openOn === 'left')) ? options.openOn : 'left';
-
-        return _createPanel(options);
-      }
-    }
-
     class Panel {
       /**
        * @param {Object} options
@@ -59,10 +42,18 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
           dismiss: this.dismiss.bind(this)
         });
 
-        this._getControllerScope()
-          .then(scopeAndTemplate => {
-            let scope = scopeAndTemplate.scope;
-            let template = scopeAndTemplate.template;
+        $q.all([
+            this._getLocals(),
+            this._getTemplate()
+          ])
+          .then(localsAndTemplate => {
+            let locals = localsAndTemplate[0];
+            let scope = locals.$scope;
+            let template = localsAndTemplate[1];
+
+            let ctrlInstantiate = $controller(this.controller, locals, true);
+
+            ctrlInstantiate();
 
             scope.$panelInstance = this; //add the Panel instance to the scope so it can be closed from whatever controller the user provides
 
@@ -77,20 +68,12 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       /**
        * @param {Object} controller
        * @param {Object} resolve - hash of promises to resolve
+       * @return {Promise<Object>}
        * @private
        */
-      _getControllerScope() {
-        let templatePromise = this.templateUrl ? _getTemplate(this.templateUrl) : $q.resolve({
-          data: this.template
-        });
-
-        let templateAndResolvePromise = $q.all([
-          templatePromise,
-          panelResolve.resolve(this.resolve)
-        ]);
-
-        return templateAndResolvePromise
-          .then(templateAndVars => {
+      _getLocals() {
+        return panelResolve.resolve(this.resolve)
+          .then(resolves => {
             let locals = {};
 
             let newScope = $rootScope.$new();
@@ -99,7 +82,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
             locals.$scope.$resolve = {};
             locals.$panelInstance = this;
 
-            let resolves = templateAndVars[1];
             angular.forEach(resolves, (value, key) => {
               locals[key] = value;
 
@@ -110,32 +92,48 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
             ctrlInstantiate();
 
-            return $q.resolve({
-              scope: newScope,
-              template: templateAndVars[0] ? templateAndVars[0].data : null
-            });
+            return locals;
           });
       }
 
+      /**
+       * @param {Object} controller
+       * @param {Object} resolve - hash of promises to resolve
+       * @return {Promise<String>}
+       * @private
+       */
+      _getTemplate() {
+        let templatePromise = this.templateUrl ? _getTemplate(this.templateUrl) : $q.resolve({
+          data: this.template
+        });
+
+        return templatePromise
+          .then(template => {
+            return template ? template.data : null;
+          });
+      }
+
+      /**
+       * @param {Object|String} result
+       * @return {Promise<Object>}
+       * @private
+       */
       close(result) {
         closeModalElements(this._elements.modalBgElement);
 
         this._deferred.resolve(result);
       }
 
+      /**
+       * @param {Object|String} reason
+       * @return {Promise<Object>}
+       * @private
+       */
       dismiss(reason) {
         closeModalElements(this._elements.modalBgElement);
 
         this._deferred.reject(reason);
       }
-    }
-
-    /**
-     * @param {Object} [options]
-     * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
-     */
-    function _createPanel(options) {
-      return new Panel(options);
     }
 
     /**
@@ -234,6 +232,21 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       return $http.get(templateUrl);
     }
 
-    return new AngularSlideOutPanel();
+    return {
+      /**
+       * @param {Object} [options]
+       * @param {String} [options.templateUrl]
+       * @param {String} [options.template]
+       * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
+       */
+      open(options) {
+        if (!options) throw new Error('angularSlideOutPanel - open() - options is required');
+        if (!options.templateUrl && !options.template) throw new Error('angularSlideOutPanel - open() - options.templateUrl or options.template is required');
+
+        options.openOn = (options.openOn && (options.openOn === 'right' || options.openOn === 'left')) ? options.openOn : 'left';
+
+        return new Panel(options);
+      }
+    };
   }
 ]);
