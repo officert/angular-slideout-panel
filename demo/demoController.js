@@ -1,8 +1,7 @@
 angular.module('demoApp').controller('demoController', [
   '$scope',
   'angularSlideOutPanel',
-  '$timeout',
-  function($scope, angularSlideOutPanel, $timeout) {
+  function($scope, angularSlideOutPanel) {
     var template = '<div class="">' +
       '<h1>Test Modal!!</h1>' +
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
@@ -49,7 +48,7 @@ angular.module('demoApp').controller('demoController', [
       '</p>' +
       '</div>';
 
-    $scope.openPanel1 = function() {
+    $scope.openPanelLeft = function() {
       angularSlideOutPanel.open({
         template: template,
         openOn: 'left',
@@ -70,7 +69,7 @@ angular.module('demoApp').controller('demoController', [
       });
     };
 
-    $scope.openPanel2 = function() {
+    $scope.openPanelRight = function() {
       var panelInstance2 = angularSlideOutPanel.open({
         template: template,
         openOn: 'right',

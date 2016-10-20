@@ -35,55 +35,153 @@
           <li>
             <a href="/">Angular Slideout Panel</a>
           </li>
+          <li>
+            <a href="#getting-started">Getting Started</a>
+          </li>
+          <li>
+            <a href="#example">Example</a>
+          </li>
         </ul>
       </nav>
     </div>
   </header>
-  <div id="demo" class="container clearfix" ng-controller="demoController">
-    <div class="demo-buttons clearfix">
-      <button class="btn btn-default pull-left" ng-click="openPanel1()">
-        Open a panel on left side
-      </button>
-
-      <button class="btn btn-default pull-right" ng-click="openPanel2()">
-        Open a panel on right side
-      </button>
+  <div class="container clearfix">
+    <div id="getting-started">
+      <h2>Getting Started</h2>
+      <p>
+        Instal via Bower
+      </p>
+      <pre>
+        <code class="bash">
+bower install angular-slideout-panel --save
+        </code>
+      </pre>
     </div>
-    <div class="demo-tabs clearfix">
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
-          <a href="#markup" aria-controls="markup" role="tab" data-toggle="tab">
-            Markup
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#javascript" aria-controls="javascript" role="tab" data-toggle="tab">
-            Javascript
-          </a>
-        </li>
-        <li class="pull-right">
-          <a href="https://plnkr.co/edit/30HA7dmU5ycgRrMwovv9?p=preview" target="_blank" class="btn btn-primary">
-            Edit in Plunker
-          </a>
-        </li>
-      </ul>
+    <div id="example" ng-controller="demoController">
+      <h2>Example</h2>
+      <div class="demo-buttons clearfix">
+        <button class="btn btn-default pull-left" ng-click="openPanelLeft()">
+          Open a panel on left side
+        </button>
 
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="markup">
-          <pre>
-            <code class="html">
-            </code>
-          </pre>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="javascript">
-          <pre>
-            <code class="javascript">
-function() {
+        <button class="btn btn-default pull-right" ng-click="openPanelRight()">
+          Open a panel on right side
+        </button>
+      </div>
+      <div class="demo-tabs clearfix">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active">
+            <a href="#markup" aria-controls="markup" role="tab" data-toggle="tab">
+              Markup
+            </a>
+          </li>
+          <li role="presentation">
+            <a href="#javascript" aria-controls="javascript" role="tab" data-toggle="tab">
+              Javascript
+            </a>
+          </li>
+          <li class="pull-right">
+            <a href="https://plnkr.co/edit/30HA7dmU5ycgRrMwovv9?p=preview" target="_blank" class="btn btn-primary">
+              Edit in Plunker
+            </a>
+          </li>
+        </ul>
 
-}
-            </code>
-          </pre>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="markup">
+            <pre>
+              <code class="html">
+  &lt;div id="demo" class="container clearfix" ng-controller="demoController"&gt;
+    &lt;div class="demo-buttons clearfix"&gt;
+      &lt;button class="btn btn-default pull-left" ng-click="openPanelLeft()"&gt;
+        Open a panel on left side
+      &lt;/button&gt;
+
+      &lt;button class="btn btn-default pull-right" ng-click="openPanelRight()"&gt;
+        Open a panel on right side
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+              </code>
+            </pre>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="javascript">
+            <pre>
+              <code class="javascript">
+  angular.module('demoApp', [
+    'angular-slideout-panel'
+  ]);
+
+  angular.module('demoApp').controller('demoCtrl', [
+    '$scope',
+    'angularSlideOutPanel',
+    function($scope, angularSlideOutPanel) {
+      $scope.openPanelLeft = function() {
+        angularSlideOutPanel.open({
+          template: template,
+          openOn: 'left',
+          controller: [
+            '$scope',
+            'user',
+            modalController
+          ],
+          resolve: {
+            user: [
+              function() {
+                return {
+                  firstName: 'Jerry'
+                };
+              }
+            ]
+          }
+        });
+      };
+
+      $scope.openPanelRight = function() {
+        var panelInstance2 = angularSlideOutPanel.open({
+          template: template,
+          openOn: 'right',
+          controller: [
+            '$scope',
+            'user',
+            modalController
+          ],
+          resolve: {
+            user: [
+              function() {
+                return {
+                  firstName: 'Jerry'
+                };
+              }
+            ]
+          }
+        });
+
+        panelInstance2.result
+          .then(function(result) {
+            console.log('panel was closed with result : ', result);
+          }).catch(function(error) {
+            console.log('panel was rejected with error : ', error);
+          });
+      };
+
+      function modalController($scope, user) {
+        $scope.closePanel = function() {
+          $scope.$panelInstance.close('this is from the controller!!');
+        };
+
+        $scope.dismissPanel = function() {
+          $scope.$panelInstance.dismiss('this is from the controller!!');
+        };
+
+        $scope.user = user;
+      }
+    }
+  ]);
+              </code>
+            </pre>
+          </div>
         </div>
       </div>
     </div>
