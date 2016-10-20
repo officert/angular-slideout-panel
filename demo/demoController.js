@@ -3,7 +3,7 @@ angular.module('demoApp').controller('demoController', [
   'angularSlideOutPanel',
   function($scope, angularSlideOutPanel) {
     var template = '<div class="">' +
-      '<h1>Test Modal!!</h1>' +
+      '<h1>Test Panel!!</h1>' +
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
       '<button class="btn btn-primary" ng-click="dismissPanel()">Dismiss Me</button>' +
       '<br>' +
