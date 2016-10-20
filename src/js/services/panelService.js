@@ -9,8 +9,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   'panelResolve',
   ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack, panelResolve) => {
     const PANEL_ELEMENT_CLASSES = {
-      PANEL_ELEMENT: 'angular-panel',
-      PANEL_ELEMENT_OPEN: 'angular-panel-open-',
       PANEL_BG_ELEMENT: 'angular-panel-bg'
     };
 
@@ -145,10 +143,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     function _createPanelElements(options) {
       options = options || {};
 
-      let modalElement = angular.element(document.createElement('div'));
-      modalElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_ELEMENT);
-
-      let modalBgElement = getOrCreateModalBgElement(modalElement, options);
+      let modalBgElement = getOrCreateModalBgElement(options);
 
       let modalDialogElement = angular.element(document.createElement('div'));
       modalDialogElement.addClass('angular-panel-dialog');
@@ -177,34 +172,28 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       modalBgElement.append(modalDialogElement);
 
-      modalElement.append(modalBgElement);
-
       let bodyElement = angular.element(document.querySelector('body'));
-      if (bodyElement) bodyElement.append(modalElement);
+      if (bodyElement) bodyElement.append(modalBgElement);
 
       return {
         modalBgElement,
-        modalElement,
         modalContentElement
       };
     }
 
     /**
-     * @param {DOMElement} modalElement
      * @param {Object} [options]
      * @param {String} [options.openOn] - direction to open the panel
      */
-    function getOrCreateModalBgElement(modalElement, options) {
+    function getOrCreateModalBgElement(options) {
       options = options || {};
 
       let bodyElement = angular.element(document.querySelector('body'));
-      let existingModalBgElement = document.querySelector(`.${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}`);
-
-      if (existingModalBgElement) return angular.element(existingModalBgElement);
 
       let modalBgElement = angular.element(document.createElement('div'));
+
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
-      modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_ELEMENT_OPEN + options.openOn);
+      modalBgElement.addClass('angular-panel-open-' + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss('backdrop click');
       });
@@ -227,7 +216,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       $timeout(() => {
         modalElement.remove();
-      }, 600);
+      }, 500);
 
       let bodyElement = angular.element(document.querySelector('body'));
 
