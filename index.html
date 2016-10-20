@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <header class="navbar navbar-static-top navbar-default" id="top">
+  <header class="navbar navbar-static-top navbar-fixed-top navbar-default" id="top">
     <div class="container">
       <div class="navbar-header">
         <button aria-controls="bs-navbar" aria-expanded="false" class="collapsed navbar-toggle" data-target="#asp-navbar" data-toggle="collapse" type="button">
@@ -49,11 +49,31 @@
     <div id="getting-started">
       <h2>Getting Started</h2>
       <p>
-        Instal via Bower
+        <strong>1) Install via Bower</strong>
       </p>
       <pre>
         <code class="bash">
 bower install angular-slideout-panel --save
+        </code>
+      </pre>
+      <p>
+        <strong>2) Add JS and CSS</strong>
+      </p>
+      <pre>
+        <code class="bash">
+&lt;script src="bower_components/angular-slideout-panel/release/js/angular-slideout-panel.min.js"&gt;&lt;/script&gt;
+
+&lt;link rel="stylesheet" href="bower_components/angular-slideout-panel/release/css/angular-slideout-panel.min.css"&gt;
+        </code>
+      </pre>
+      <p>
+        <strong>3) Add Angular dependency</strong>
+      </p>
+      <pre>
+        <code class="bash">
+angular.module('demoApp', [
+  'angular-slideout-panel'
+]);
         </code>
       </pre>
     </div>

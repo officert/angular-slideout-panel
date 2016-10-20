@@ -49,7 +49,7 @@ angular.module('demoApp').controller('demoController', [
       '</div>';
 
     $scope.openPanelLeft = function() {
-      angularSlideOutPanel.open({
+      var panelInstance1 = angularSlideOutPanel.open({
         template: template,
         openOn: 'left',
         controller: [
@@ -67,6 +67,13 @@ angular.module('demoApp').controller('demoController', [
           ]
         }
       });
+
+      panelInstance1.result
+        .then(function(result) {
+          console.log('panel was closed with result : ', result);
+        }).catch(function(error) {
+          console.log('panel was rejected with error : ', error);
+        });
     };
 
     $scope.openPanelRight = function() {

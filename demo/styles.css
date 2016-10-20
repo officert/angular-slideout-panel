@@ -1,4 +1,10 @@
-#demo {
+body {
+  padding-top: 80px;
+}
+#getting-started {
+  margin-bottom: 50px;
+}
+#example {
   padding-top: 50px;
 }
 .demo-buttons {
