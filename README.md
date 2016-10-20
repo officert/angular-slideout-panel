@@ -1,4 +1,4 @@
-# [Angular Slideout Panels](https://tablelist.github.io/angular-slideout-panel/)
+# [Angular Slideout Panel](https://tablelist.github.io/angular-slideout-panel/)
 
 ### Getting Started
 1) Install via Bower
