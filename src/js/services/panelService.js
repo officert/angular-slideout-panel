@@ -9,7 +9,10 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   'panelResolve',
   ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack, panelResolve) => {
     const PANEL_ELEMENT_CLASSES = {
-      PANEL_BG_ELEMENT: 'angular-panel-bg'
+      PANEL_BG_ELEMENT: 'angular-panel-bg',
+      PANEL_BG_ELEMENT_OPEN: 'angular-panel-open-',
+      PANEL_DIALOG_ELEMENT: 'angular-panel-dialog',
+      PANEL_CONTENT_ELEMENT: 'angular-panel-content'
     };
 
     class AngularSlideOutPanel {
@@ -74,6 +77,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       /**
        * @param {Object} controller
        * @param {Object} resolve - hash of promises to resolve
+       * @private
        */
       _getControllerScope() {
         let templatePromise = this.templateUrl ? _getTemplate(this.templateUrl) : $q.resolve({
@@ -146,21 +150,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       let modalBgElement = getOrCreateModalBgElement(options);
 
       let modalDialogElement = angular.element(document.createElement('div'));
-      modalDialogElement.addClass('angular-panel-dialog');
+      modalDialogElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_DIALOG_ELEMENT);
       modalDialogElement.on('click', (event) => {
         event.stopPropagation(); //prevent a click on the modal from closing it
       });
 
       let modalContentElement = angular.element(document.createElement('div'));
-      modalContentElement.addClass('angular-panel-content');
-
-      // let modalCloseElement = angular.element(document.createElement('div'));
-      // modalCloseElement.addClass('angular-panel-close');
-      // modalCloseElement.on('click', (event) => { //close the modal on close button click
-      //   if (event) event.preventDefault();
-      //
-      //   if (options.dismiss) options.dismiss('backdrop click');
-      // });
+      modalContentElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_CONTENT_ELEMENT);
 
       let modalCloseAElement = angular.element(document.createElement('a'));
       modalCloseAElement.attr('href', '#');
@@ -193,7 +189,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       let modalBgElement = angular.element(document.createElement('div'));
 
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
-      modalBgElement.addClass('angular-panel-open-' + options.openOn);
+      modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT_OPEN + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss('backdrop click');
       });
