@@ -12,7 +12,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       PANEL_BG_ELEMENT: 'angular-panel-bg',
       PANEL_BG_ELEMENT_OPEN: 'angular-panel-open-',
       PANEL_DIALOG_ELEMENT: 'angular-panel-dialog',
-      PANEL_CONTENT_ELEMENT: 'angular-panel-content'
+      PANEL_CONTENT_ELEMENT: 'angular-panel-content',
+      BODY_ELEMENT_PANEL_OPEN: 'panel-open'
     };
 
     class Panel {
@@ -205,6 +206,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
     function closeModalElements(modalBgElement) {
       $timeout(() => {
+        angular.element(document.querySelector('body')).removeClass(PANEL_ELEMENT_CLASSES.BODY_ELEMENT_PANEL_OPEN);
+
         modalBgElement.removeClass('open');
 
         $timeout(() => {
@@ -219,6 +222,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
     function openModalElements(modalBgElement) {
       $timeout(() => {
+        angular.element(document.querySelector('body')).addClass(PANEL_ELEMENT_CLASSES.BODY_ELEMENT_PANEL_OPEN);
         modalBgElement.addClass('open');
       });
     }
