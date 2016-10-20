@@ -56,7 +56,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
           dismiss: this.dismiss.bind(this)
         });
 
-        _getControllerScope(this)
+        this._getControllerScope()
           .then(scopeAndTemplate => {
             let scope = scopeAndTemplate.scope;
             let template = scopeAndTemplate.template;
@@ -67,18 +67,60 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
             this._elements.modalContentElement.append(compiledElement);
 
-            openModalElements(this._elements.modalElement, this._elements.modalBgElement);
+            openModalElements(this._elements.modalBgElement);
+          });
+      }
+
+      /**
+       * @param {Object} controller
+       * @param {Object} resolve - hash of promises to resolve
+       */
+      _getControllerScope() {
+        let templatePromise = this.templateUrl ? _getTemplate(this.templateUrl) : $q.resolve({
+          data: this.template
+        });
+
+        let templateAndResolvePromise = $q.all([
+          templatePromise,
+          panelResolve.resolve(this.resolve)
+        ]);
+
+        return templateAndResolvePromise
+          .then(templateAndVars => {
+            let locals = {};
+
+            let newScope = $rootScope.$new();
+
+            locals.$scope = newScope;
+            locals.$scope.$resolve = {};
+            locals.$panelInstance = this;
+
+            let resolves = templateAndVars[1];
+            angular.forEach(resolves, (value, key) => {
+              locals[key] = value;
+
+              locals.$scope.$resolve[key] = value;
+            });
+
+            let ctrlInstantiate = $controller(this.controller, locals, true);
+
+            ctrlInstantiate();
+
+            return $q.resolve({
+              scope: newScope,
+              template: templateAndVars[0] ? templateAndVars[0].data : null
+            });
           });
       }
 
       close(result) {
-        closeModalElements(this._elements.modalElement, this._elements.modalBgElement);
+        closeModalElements(this._elements.modalBgElement);
 
         this._deferred.resolve(result);
       }
 
       dismiss(reason) {
-        closeModalElements(this._elements.modalElement, this._elements.modalBgElement);
+        closeModalElements(this._elements.modalBgElement);
 
         this._deferred.reject(reason);
       }
@@ -90,48 +132,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      */
     function _createPanel(options) {
       return new Panel(options);
-    }
-
-    /**
-     * @param {Object} controller
-     * @param {Object} resolve - hash of promises to resolve
-     */
-    function _getControllerScope(panelInstance) {
-      let templatePromise = panelInstance.templateUrl ? _getTemplate(panelInstance.templateUrl) : $q.resolve({
-        data: panelInstance.template
-      });
-
-      let templateAndResolvePromise = $q.all([
-        templatePromise,
-        panelResolve.resolve(panelInstance.resolve)
-      ]);
-
-      return templateAndResolvePromise
-        .then(templateAndVars => {
-          let locals = {};
-
-          let newScope = $rootScope.$new();
-
-          locals.$scope = newScope;
-          locals.$scope.$resolve = {};
-          locals.$panelInstance = panelInstance;
-
-          let resolves = templateAndVars[1];
-          angular.forEach(resolves, (value, key) => {
-            locals[key] = value;
-
-            locals.$scope.$resolve[key] = value;
-          });
-
-          let ctrlInstantiate = $controller(panelInstance.controller, locals, true);
-
-          ctrlInstantiate();
-
-          return $q.resolve({
-            scope: newScope,
-            template: templateAndVars[0] ? templateAndVars[0].data : null
-          });
-        });
     }
 
     /**
@@ -209,21 +209,21 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       return modalBgElement;
     }
 
-    function closeModalElements(modalElement, modalBgElement) {
+    function closeModalElements(modalBgElement) {
       $timeout(() => {
         modalBgElement.removeClass('open');
-      });
 
-      $timeout(() => {
-        modalElement.remove();
-      }, 500);
+        $timeout(() => {
+          modalBgElement.remove();
+        }, 600);
+      });
 
       let bodyElement = angular.element(document.querySelector('body'));
 
       bodyElement.off('keydown keypress');
     }
 
-    function openModalElements(modalElement, modalBgElement) {
+    function openModalElements(modalBgElement) {
       $timeout(() => {
         modalBgElement.addClass('open');
       });
