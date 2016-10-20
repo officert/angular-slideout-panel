@@ -8,6 +8,12 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   'angularSlideOutPanelStack',
   'panelResolve',
   ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack, panelResolve) => {
+    const PANEL_ELEMENT_CLASSES = {
+      PANEL_ELEMENT: 'angular-panel',
+      PANEL_ELEMENT_OPEN: 'angular-panel-open-',
+      PANEL_BG_ELEMENT: 'angular-panel-bg'
+    };
+
     class AngularSlideOutPanel {
       /**
        * @param {Object} [options]
@@ -140,7 +146,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       options = options || {};
 
       let modalElement = angular.element(document.createElement('div'));
-      modalElement.addClass('angular-panel');
+      modalElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_ELEMENT);
 
       let modalBgElement = getOrCreateModalBgElement(modalElement, options);
 
@@ -192,13 +198,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       options = options || {};
 
       let bodyElement = angular.element(document.querySelector('body'));
-      let existingModalBgElement = document.querySelector('.angular-panel-bg');
+      let existingModalBgElement = document.querySelector(`.${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}`);
 
       if (existingModalBgElement) return angular.element(existingModalBgElement);
 
       let modalBgElement = angular.element(document.createElement('div'));
-      modalBgElement.addClass('angular-panel-bg');
-      modalBgElement.addClass('angular-panel-open-' + options.openOn);
+      modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
+      modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_ELEMENT_OPEN + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss('backdrop click');
       });
@@ -221,7 +227,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       $timeout(() => {
         modalElement.remove();
-      }, 200);
+      }, 600);
 
       let bodyElement = angular.element(document.querySelector('body'));
 
