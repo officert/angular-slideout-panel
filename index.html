@@ -41,6 +41,9 @@
           <li>
             <a href="#example">Example</a>
           </li>
+          <li>
+            <a href="#docs">Docs</a>
+          </li>
         </ul>
         <ul class="asp-navbar nav navbar-nav pull-right">
           <li>
@@ -207,6 +210,42 @@ angular.module('demoApp', [
               </code>
             </pre>
           </div>
+        </div>
+      </div>
+    </div>
+    <div id="docs">
+      <h2>Docs</h2>
+      <p>
+        The <code>angularSlideOutPanel</code> service is used to create panels. Creating panels is straightforward: create a template and controller, and reference them when using <code>angularSlideOutPanel</code>.
+      </p>
+      <p>
+        The <code>angularSlideOutPanel</code> has only one method: <code>open(options)</code>.
+      </p>
+      <hr>
+      <div class="clearfix">
+        <div class="col-sm-6">
+          <h3><code>angularSlideOutPanel.open(options)</code></h3>
+        </div>
+        <div class="col-sm-6">
+          <h4>options parameter:</h4>
+          <ul>
+            <li>
+              <code>template</code> (Type: <code>string</code>) Inline template representing the modal's content.
+            </li>
+            <li>
+              <code>templateUrl</code> (Type: <code>string</code>) A path to a template representing modal's content. You need either a <code>template</code> or <code>templateUrl</code>.
+            </li>
+            <li>
+              <code>openOn</code> (Type: <code>string</code>) Either <code>left</code> or <code>right</code>. Changes the side the panel opens on.
+            </li>
+            <li>
+              <code>controller</code> (Type: function|string|array, Example: MyModalController) - A controller for the modal instance, either a controller name as a string, or an inline controller function, optionally wrapped in array notation for dependency
+              injection. Has a special $panelInstance injectable to access the panel instance.
+            </li>
+            <li>
+              <code>resolve</code> (Type: Object) - Members that will be resolved and passed to the controller as locals; it is equivalent of the resolve property in the router.
+            </li>
+          </ul>
         </div>
       </div>
     </div>
