@@ -57,6 +57,16 @@
     <div id="getting-started">
       <h2>Getting Started</h2>
       <p>
+        Angular Slideout Panel was built to be as close to a drop-in replacement as possible for Angular Bootstrap's Modal (<a target="_blank" href="https://angular-ui.github.io/bootstrap/#/modal">https://angular-ui.github.io/bootstrap/#/modal</a>).
+      </p>
+      <p>
+        Take a look at the <a href="#docs">docs</a> for the API.
+      </p>
+      <p>
+        Follow these steps to get started.
+      </p>
+      <br>
+      <p>
         <strong>1) Install via Bower</strong>
       </p>
       <pre>
@@ -246,6 +256,19 @@ angular.module('demoApp', [
               <code>resolve</code> (Type: Object) - Members that will be resolved and passed to the controller as locals; it is equivalent of the resolve property in the router.
             </li>
           </ul>
+          <h4>return</h4> The <code>open</code> method returns a panel instance, an object with the following properties:
+          <ul>
+            <li>
+              <code>close(result)</code> (Type: <code>function</code>) - Can be used to close a modal, passing a result.
+            </li>
+            <li>
+              <code>dismiss(reason)</code> (Type: <code>function</code>) - Can be used to dismiss a modal, passing a reason.
+            </li>
+            <li>
+              <code>result</code> (Type: <code>promise</code>) - Is resolved when a modal is closed and rejected when a modal is dismissed.
+            </li>
+          </ul>
+          A dependency called <code>$panelInstance</code> can also be injected into your controller, so you can control the panel from there as well. Simply add <code>$panelInstance</code> as a dependency on your controller</code>.
         </div>
       </div>
     </div>
