@@ -1,5 +1,7 @@
 # [Angular Slideout Panel](https://tablelist.github.io/angular-slideout-panel/)
 
+[![Bower version](https://badge.fury.io/bo/angular-slideout-package.svg)](https://badge.fury.io/bo/angular-slideout-package)
+
 ### Getting Started
 1) Install via Bower
 ``` bash
