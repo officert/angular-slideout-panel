@@ -9,7 +9,8 @@
   "globals": {
     "angular": true,
     "alert": true,
-    "document": true
+    "document": true,
+    "console": true
   },
   "camelcase": true,
   "bitwise": true,

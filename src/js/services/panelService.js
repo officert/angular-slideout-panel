@@ -10,7 +10,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
   ($q, $rootScope, $timeout, $http, $compile, $controller, angularSlideOutPanelStack, panelResolve) => {
     const PANEL_ELEMENT_CLASSES = {
       PANEL_BG_ELEMENT: 'angular-panel-bg',
-      PANEL_BG_ELEMENT_OPEN: 'angular-panel-open-',
+      PANEL_BG_ELEMENT_OPEN: 'angular-panel-dialog-open-',
       PANEL_DIALOG_ELEMENT: 'angular-panel-dialog',
       PANEL_CONTENT_ELEMENT: 'angular-panel-content',
       BODY_ELEMENT_PANEL_OPEN: 'panel-open'
@@ -66,7 +66,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
             this._elements.modalContentElement.append(compiledElement);
 
-            openModalElements(this._elements.modalBgElement);
+            openModalElements(this._elements.modalDialogElement);
 
             angularSlideOutPanelStack.add(this);
           });
@@ -133,7 +133,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        * @private
        */
       close(result) {
-        closeModalElements(this._elements.modalBgElement);
+        this._closePanelElement();
 
         this._deferred.resolve(result);
       }
@@ -144,9 +144,33 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        * @private
        */
       dismiss(reason) {
-        closeModalElements(this._elements.modalBgElement);
+        this._closePanelElement();
 
         this._deferred.reject(reason);
+      }
+
+      _closePanelElement() {
+        let modalBgElement = angular.element(document.querySelector(`.${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}`));
+
+        let bodyElement = angular.element(document.querySelector('body'));
+
+        bodyElement.off('keydown keypress');
+
+        this._elements.modalDialogElement.removeClass('open');
+
+        angularSlideOutPanelStack.remove(this);
+
+        //TODO: remove the background element
+
+        $timeout(() => {
+          if (angularSlideOutPanelStack.length() === 0) {
+            angular.element(document.querySelector('body')).removeClass(PANEL_ELEMENT_CLASSES.BODY_ELEMENT_PANEL_OPEN);
+
+            $timeout(() => {
+              modalBgElement.remove();
+            }, 600);
+          }
+        });
       }
     }
 
@@ -165,6 +189,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       let modalDialogElement = angular.element(document.createElement('div'));
       modalDialogElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_DIALOG_ELEMENT);
+      modalDialogElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT_OPEN + options.openOn);
       modalDialogElement.on('click', (event) => {
         event.stopPropagation(); //prevent a click on the modal from closing it
       });
@@ -187,7 +212,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       return {
         modalBgElement,
-        modalContentElement
+        modalContentElement,
+        modalDialogElement
       };
     }
 
@@ -209,7 +235,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       }
 
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
-      modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT_OPEN + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
         if (options.dismiss) options.dismiss(PANEL_CLICK_EVENTS.BACKDROP_CLICK);
       });
@@ -225,28 +250,12 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       return modalBgElement;
     }
 
-    function closeModalElements(modalBgElement) {
-      $timeout(() => {
-        angular.element(document.querySelector('body')).removeClass(PANEL_ELEMENT_CLASSES.BODY_ELEMENT_PANEL_OPEN);
+    function openModalElements(modalDialogElement) {
+      if (!modalDialogElement) throw new Error('openModalElements() - modalDialogElement is required');
 
-        modalBgElement.removeClass('open');
-
-        $timeout(() => {
-          modalBgElement.remove();
-        }, 600);
-      });
-
-      let bodyElement = angular.element(document.querySelector('body'));
-
-      bodyElement.off('keydown keypress');
-
-      angularSlideOutPanelStack.remove(this);
-    }
-
-    function openModalElements(modalBgElement) {
       $timeout(() => {
         angular.element(document.querySelector('body')).addClass(PANEL_ELEMENT_CLASSES.BODY_ELEMENT_PANEL_OPEN);
-        modalBgElement.addClass('open');
+        modalDialogElement.addClass('open');
       });
     }
 

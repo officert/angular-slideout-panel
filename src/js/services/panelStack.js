@@ -22,6 +22,16 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
 
         console.log('stack length', this._stack.length);
       }
+
+      pop() {
+        this._stack.pop();
+
+        console.log('stack length', this._stack.length);
+      }
+
+      length() {
+        return this._stack.length;
+      }
     }
 
     return new AngularPanelStack();

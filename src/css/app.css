@@ -31,13 +31,13 @@
   -moz-transition: background 0.3s 0.3s;
   transition: background 0.3s 0.3s;
 }
-.angular-panel-bg.open {
+.panel-open .angular-panel-bg {
   visibility: visible;
   -webkit-transition: visibility 0s 0s;
   -moz-transition: visibility 0s 0s;
   transition: visibility 0s 0s;
 }
-.angular-panel-bg.open::after {
+.panel-open .angular-panel-bg::after {
   content: '';
   background: rgba(0, 0, 0, 0.6);
   -webkit-transition: background 0.3s 0s;
@@ -84,7 +84,7 @@
     width: 50%;
   }
 }
-.angular-panel-bg.angular-panel-open-right .angular-panel-dialog {
+.angular-panel-dialog.angular-panel-dialog-open-right {
   right: 0;
   -webkit-transform: translate3d(100%, 0, 0);
   -moz-transform: translate3d(100%, 0, 0);
@@ -92,7 +92,7 @@
   -o-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
 }
-.angular-panel-bg.angular-panel-open-left .angular-panel-dialog {
+.angular-panel-dialog.angular-panel-dialog-open-left {
   left: 0;
   -webkit-transform: translate3d(-100%, 0, 0);
   -moz-transform: translate3d(-100%, 0, 0);
@@ -100,7 +100,7 @@
   -o-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
 }
-.angular-panel-bg.open .angular-panel-dialog {
+.angular-panel-dialog.open {
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
