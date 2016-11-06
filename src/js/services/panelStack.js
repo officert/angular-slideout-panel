@@ -1,5 +1,6 @@
 angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
-  () => {
+  '$timeout',
+  ($timeout) => {
     class AngularPanelStack {
       constructor() {
         this._stack = [];
@@ -9,8 +10,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
         if (!panel) return;
 
         this._stack.push(panel);
-
-        console.log('stack length', this._stack.length);
       }
 
       remove(panel) {
@@ -19,18 +18,22 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
         let index = this._stack.indexOf(panel);
 
         if (index >= 0) this._stack.splice(index, 1);
-
-        console.log('stack length', this._stack.length);
       }
 
       pop() {
         this._stack.pop();
-
-        console.log('stack length', this._stack.length);
       }
 
       length() {
         return this._stack.length;
+      }
+
+      clearAll() {
+        angular.forEach(this._stack, panel => {
+          $timeout(() => {
+            panel.close();
+          }, 500);
+        });
       }
     }
 
