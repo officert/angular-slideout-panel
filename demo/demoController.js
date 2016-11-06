@@ -51,6 +51,11 @@ angular.module('demoApp').controller('demoController', [
 
     var template2 = '<div>' +
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
+      '<button class="btn btn-primary" ng-click="openInnerPanel()">Open Inner Panel</button>' +
+      '</div>';
+
+    var template3 = '<div>' +
+      '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
       '</div>';
 
     $scope.openPanelLeft = function() {
@@ -128,6 +133,21 @@ angular.module('demoApp').controller('demoController', [
             function($scope) {
               $scope.closePanel = function() {
                 $scope.$panelInstance.close('this is from the controller!!');
+              };
+
+              $scope.openInnerPanel = function() {
+                angularSlideOutPanel.open({
+                  template: template3,
+                  openOn: 'right',
+                  controller: [
+                    '$scope',
+                    function($scope) {
+                      $scope.closePanel = function() {
+                        $scope.$panelInstance.close('this is from the controller!!');
+                      };
+                    }
+                  ]
+                });
               };
             }
           ]
