@@ -135,8 +135,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       close(result) {
         closeModalElements(this._elements.modalBgElement);
 
-        angularSlideOutPanelStack.remove(this);
-
         this._deferred.resolve(result);
       }
 
@@ -147,8 +145,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        */
       dismiss(reason) {
         closeModalElements(this._elements.modalBgElement);
-
-        angularSlideOutPanelStack.remove(this);
 
         this._deferred.reject(reason);
       }
@@ -204,7 +200,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
 
       let bodyElement = angular.element(document.querySelector('body'));
 
-      let modalBgElement = angular.element(document.createElement('div'));
+      let modalBgElement = document.querySelector(`.${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}`);
+
+      if (!modalBgElement) {
+        modalBgElement = angular.element(document.createElement('div'));
+      } else {
+        modalBgElement = angular.element(modalBgElement);
+      }
 
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT_OPEN + options.openOn);
@@ -237,6 +239,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       let bodyElement = angular.element(document.querySelector('body'));
 
       bodyElement.off('keydown keypress');
+
+      angularSlideOutPanelStack.remove(this);
     }
 
     function openModalElements(modalBgElement) {
