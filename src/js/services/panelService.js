@@ -16,13 +16,19 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       BODY_ELEMENT_PANEL_OPEN: 'panel-open'
     };
 
+    const PANEL_CLICK_EVENTS = {
+      BACKDROP_CLICK: 'backdrop click',
+      ESCAPSE_KEY_PRESS: 'escape key press'
+    };
+
     class Panel {
       /**
        * @param {Object} options
-       * @param {String} [options.templateUrl]
-       * @param {String} [options.template]
-       * @param {String} [options.openOn]
-       * @param {Object} [options.resolve]
+       * @param {String} [options.templateUrl] - template url
+       * @param {String} [options.template] - inline template HTML string
+       * @param {String} [options.openOn] - direction to open ('left' or 'right')
+       * @param {Object} [options.resolve] - hash of Promises to resolve before opening the panel
+       * @param {String} [options.panelClass] - CSS class name(s) to add
        * @param {String|Function|Array} [options.controller]
        */
       constructor(options) {
@@ -36,11 +42,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         this.openOn = options.openOn;
         this.controller = options.controller;
         this.resolve = options.resolve;
+        this.panelClass = options.panelClass;
 
         this._elements = _createPanelElements({
           openOn: this.openOn,
           close: this.close.bind(this),
-          dismiss: this.dismiss.bind(this)
+          dismiss: this.dismiss.bind(this),
+          panelClass: this.panelClass
         });
 
         $q.all([
@@ -52,10 +60,6 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
             let scope = locals.$scope;
             let template = localsAndTemplate[1];
 
-            let ctrlInstantiate = $controller(this.controller, locals, true);
-
-            ctrlInstantiate();
-
             scope.$panelInstance = this; //add the Panel instance to the scope so it can be closed from whatever controller the user provides
 
             let compiledElement = _createTemplate(scope, template);
@@ -63,6 +67,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
             this._elements.modalContentElement.append(compiledElement);
 
             openModalElements(this._elements.modalBgElement);
+
+            angularSlideOutPanelStack.add(this);
           });
       }
 
@@ -73,7 +79,10 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        * @private
        */
       _getLocals() {
-        return panelResolve.resolve(this.resolve)
+        let promises = [];
+        if (this.resolve) promises.push(panelResolve.resolve(this.resolve));
+
+        return (this.resolve ? panelResolve.resolve(this.resolve) : $q.resolve(null))
           .then(resolves => {
             let locals = {};
 
@@ -83,15 +92,19 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
             locals.$scope.$resolve = {};
             locals.$panelInstance = this;
 
-            angular.forEach(resolves, (value, key) => {
-              locals[key] = value;
+            if (resolves) {
+              angular.forEach(resolves, (value, key) => {
+                locals[key] = value;
 
-              locals.$scope.$resolve[key] = value;
-            });
+                locals.$scope.$resolve[key] = value;
+              });
+            }
 
-            let ctrlInstantiate = $controller(this.controller, locals, true);
+            if (this.controller) {
+              let ctrlInstantiate = $controller(this.controller, locals, true);
 
-            ctrlInstantiate();
+              ctrlInstantiate();
+            }
 
             return locals;
           });
@@ -122,6 +135,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       close(result) {
         closeModalElements(this._elements.modalBgElement);
 
+        angularSlideOutPanelStack.remove(this);
+
         this._deferred.resolve(result);
       }
 
@@ -133,6 +148,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       dismiss(reason) {
         closeModalElements(this._elements.modalBgElement);
 
+        angularSlideOutPanelStack.remove(this);
+
         this._deferred.reject(reason);
       }
     }
@@ -142,11 +159,13 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
      * @param {Function} [options.close] - close the modal and resolve the promise
      * @param {Function} [options.dismiss] - close the modal and reject the promise
+     * @param {String} [options.panelClass] - panel CSS class(es)
      */
     function _createPanelElements(options) {
       options = options || {};
 
       let modalBgElement = getOrCreateModalBgElement(options);
+      if (options.panelClass) modalBgElement.addClass(options.panelClass);
 
       let modalDialogElement = angular.element(document.createElement('div'));
       modalDialogElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_DIALOG_ELEMENT);
@@ -190,14 +209,14 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT_OPEN + options.openOn);
       modalBgElement.on('click', () => { //close the modal on backgroup clicks
-        if (options.dismiss) options.dismiss('backdrop click');
+        if (options.dismiss) options.dismiss(PANEL_CLICK_EVENTS.BACKDROP_CLICK);
       });
 
       bodyElement.on('keydown keypress', event => { //close the modal on escape keypress
         if (event.which === 27) { // 27 = esc key
           event.preventDefault();
 
-          if (options.dismiss) options.dismiss('escape key press');
+          if (options.dismiss) options.dismiss(PANEL_CLICK_EVENTS.ESCAPSE_KEY_PRESS);
         }
       });
 

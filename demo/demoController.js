@@ -2,10 +2,11 @@ angular.module('demoApp').controller('demoController', [
   '$scope',
   'angularSlideOutPanel',
   function($scope, angularSlideOutPanel) {
-    var template = '<div class="">' +
+    var template1 = '<div class="">' +
       '<h1>Test Panel!!</h1>' +
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
       '<button class="btn btn-primary" ng-click="dismissPanel()">Dismiss Me</button>' +
+      '<button class="btn btn-primary" ng-click="openInnerPanel()">Open Inner Panel</button>' +
       '<br>' +
       '<br>' +
       '<br>' +
@@ -48,15 +49,20 @@ angular.module('demoApp').controller('demoController', [
       '</p>' +
       '</div>';
 
+    var template2 = '<div>' +
+      '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
+      '</div>';
+
     $scope.openPanelLeft = function() {
       var panelInstance1 = angularSlideOutPanel.open({
-        template: template,
+        template: template1,
         openOn: 'left',
         controller: [
           '$scope',
           'user',
           modalController
         ],
+        panelClass: 'foobar',
         resolve: {
           user: [
             function() {
@@ -78,7 +84,7 @@ angular.module('demoApp').controller('demoController', [
 
     $scope.openPanelRight = function() {
       var panelInstance2 = angularSlideOutPanel.open({
-        template: template,
+        template: template1,
         openOn: 'right',
         controller: [
           '$scope',
@@ -111,6 +117,21 @@ angular.module('demoApp').controller('demoController', [
 
       $scope.dismissPanel = function() {
         $scope.$panelInstance.dismiss('this is from the controller!!');
+      };
+
+      $scope.openInnerPanel = function() {
+        angularSlideOutPanel.open({
+          template: template2,
+          openOn: 'right',
+          controller: [
+            '$scope',
+            function($scope) {
+              $scope.closePanel = function() {
+                $scope.$panelInstance.close('this is from the controller!!');
+              };
+            }
+          ]
+        });
       };
 
       $scope.user = user;

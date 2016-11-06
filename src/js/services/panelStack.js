@@ -5,10 +5,22 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
         this._stack = [];
       }
 
-      _addPanel(panel) {
+      add(panel) {
         if (!panel) return;
 
         this._stack.push(panel);
+
+        console.log('stack length', this._stack.length);
+      }
+
+      remove(panel) {
+        if (!panel) return;
+
+        let index = this._stack.indexOf(panel);
+
+        if (index >= 0) this._stack.splice(index, 1);
+
+        console.log('stack length', this._stack.length);
       }
     }
 

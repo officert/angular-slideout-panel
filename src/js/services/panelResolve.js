@@ -10,7 +10,7 @@ angular.module('angular-slideout-panel').provider('panelResolve', [
           resolve: function(invocables) {
             let promises = [];
 
-            angular.forEach(invocables, function(value) {
+            angular.forEach(invocables, value => {
               if (angular.isFunction(value) || angular.isArray(value)) {
                 promises.push($q.resolve($injector.invoke(value)));
               } else if (angular.isString(value)) {
@@ -20,10 +20,11 @@ angular.module('angular-slideout-panel').provider('panelResolve', [
               }
             });
 
-            return $q.all(promises).then(function(resolves) {
+            return $q.all(promises).then(resolves => {
               let resolveObj = {};
               let resolveIter = 0;
-              angular.forEach(invocables, function(value, key) {
+
+              angular.forEach(invocables, (value, key) => {
                 resolveObj[key] = resolves[resolveIter++];
               });
 
