@@ -2,6 +2,7 @@
   overflow: hidden;
 }
 
+
 /* -------------------- Angular Panel BG -------------------- */
 
 .angular-panel-bg {
@@ -17,6 +18,11 @@
   -moz-transition: visibility 0s 0.6s;
   transition: visibility 0s 0.6s;
 }
+
+.angular-panel-bg-hidden::after {
+  background: none !important;
+}
+
 .angular-panel-bg::after {
   content: '';
   /* overlay layer */
@@ -31,12 +37,14 @@
   -moz-transition: background 0.3s 0.3s;
   transition: background 0.3s 0.3s;
 }
+
 .panel-open .angular-panel-bg {
   visibility: visible;
   -webkit-transition: visibility 0s 0s;
   -moz-transition: visibility 0s 0s;
   transition: visibility 0s 0s;
 }
+
 .panel-open .angular-panel-bg::after {
   content: '';
   background: rgba(0, 0, 0, 0.6);
@@ -44,6 +52,7 @@
   -moz-transition: background 0.3s 0s;
   transition: background 0.3s 0s;
 }
+
 
 /* -------------------- Angular Panel Dialog -------------------- */
 
@@ -64,6 +73,7 @@
   -moz-transition-delay: 0.3s;
   transition-delay: 0.3s;
 }
+
 .angular-panel-bg.open .angular-panel-dialog {
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
@@ -74,16 +84,19 @@
   -moz-transition-delay: 0s;
   transition-delay: 0s;
 }
+
 @media only screen and (min-width: 768px) {
   .angular-panel-bg .angular-panel-dialog {
     width: 70%;
   }
 }
+
 @media only screen and (min-width: 1170px) {
   .angular-panel-bg .angular-panel-dialog {
     width: 50%;
   }
 }
+
 .angular-panel-dialog.angular-panel-dialog-open-right {
   right: 0;
   -webkit-transform: translate3d(100%, 0, 0);
@@ -91,7 +104,9 @@
   -ms-transform: translate3d(100%, 0, 0);
   -o-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
+  border-left: 1px solid #EFEFEF;
 }
+
 .angular-panel-dialog.angular-panel-dialog-open-left {
   left: 0;
   -webkit-transform: translate3d(-100%, 0, 0);
@@ -99,7 +114,9 @@
   -ms-transform: translate3d(-100%, 0, 0);
   -o-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
+  border-right: 1px solid #EFEFEF;
 }
+
 .angular-panel-dialog.open {
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
@@ -111,6 +128,7 @@
   transition-delay: 0s;
 }
 
+
 /* -------------------- Angular Panel Dialog - Header -------------------- */
 
 .angular-panel-bg .angular-panel-dialog .angular-panel-header {
@@ -120,6 +138,7 @@
   color: @gray-light;
   text-transform: uppercase;
 }
+
 
 /* -------------------- Angular Panel Dialog - Content -------------------- */
 

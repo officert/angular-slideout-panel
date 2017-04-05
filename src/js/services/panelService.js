@@ -40,6 +40,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
         this.templateUrl = options.templateUrl;
         this.template = options.template;
         this.openOn = options.openOn;
+        this.backdrop = options.backdrop;
         this.controller = options.controller;
         this.resolve = options.resolve;
         this.panelClass = options.panelClass;
@@ -48,7 +49,8 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
           openOn: this.openOn,
           close: this.close.bind(this),
           dismiss: this.dismiss.bind(this),
-          panelClass: this.panelClass
+          panelClass: this.panelClass,
+          backdrop: this.backdrop
         });
 
         $q.all([
@@ -180,12 +182,16 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
      * @param {Function} [options.close] - close the modal and resolve the promise
      * @param {Function} [options.dismiss] - close the modal and reject the promise
      * @param {String} [options.panelClass] - panel CSS class(es)
+     * @param {String} [options.backdrop] - true|false|'static'
      */
     function _createPanelElements(options) {
       options = options || {};
 
       let modalBgElement = getOrCreateModalBgElement(options);
       if (options.panelClass) modalBgElement.addClass(options.panelClass);
+      if ('backdrop' in options) {
+        if (options.backdrop === false) modalBgElement.addClass(`${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}-hidden`);
+      }
 
       let modalDialogElement = angular.element(document.createElement('div'));
       modalDialogElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_DIALOG_ELEMENT);
@@ -274,12 +280,15 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
        * @param {String} [options.templateUrl]
        * @param {String} [options.template]
        * @param {String} [options.openOn] - 'left' or 'right' - defaults to 'left'
+       * @param {String} [options.backdrop] - true|false|'static'
        */
       open(options) {
         if (!options) throw new Error('angularSlideOutPanel - open() - options is required');
         if (!options.templateUrl && !options.template) throw new Error('angularSlideOutPanel - open() - options.templateUrl or options.template is required');
 
         options.openOn = (options.openOn && (options.openOn === 'right' || options.openOn === 'left')) ? options.openOn : 'left';
+
+        if (!('backdrop' in options)) options.backdrop = true;
 
         return new Panel(options);
       }

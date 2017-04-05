@@ -1,7 +1,7 @@
 angular.module('demoApp').controller('demoController', [
   '$scope',
   'angularSlideOutPanel',
-  function($scope, angularSlideOutPanel) {
+  function ($scope, angularSlideOutPanel) {
     var template1 = '<div class="">' +
       '<h1>Test Panel!!</h1>' +
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
@@ -58,7 +58,7 @@ angular.module('demoApp').controller('demoController', [
       '<button class="btn btn-primary" ng-click="closePanel()">Close Me</button>' +
       '</div>';
 
-    $scope.openPanelLeft = function() {
+    $scope.openPanelLeft = function () {
       var panelInstance1 = angularSlideOutPanel.open({
         template: template1,
         openOn: 'left',
@@ -70,7 +70,7 @@ angular.module('demoApp').controller('demoController', [
         panelClass: 'foobar',
         resolve: {
           user: [
-            function() {
+            function () {
               return {
                 firstName: 'Jerry'
               };
@@ -80,17 +80,18 @@ angular.module('demoApp').controller('demoController', [
       });
 
       panelInstance1.result
-        .then(function(result) {
+        .then(function (result) {
           console.log('panel was closed with result : ', result);
-        }).catch(function(error) {
+        }).catch(function (error) {
           console.log('panel was rejected with error : ', error);
         });
     };
 
-    $scope.openPanelRight = function() {
+    $scope.openPanelRight = function () {
       var panelInstance2 = angularSlideOutPanel.open({
         template: template1,
         openOn: 'right',
+        backdrop: false,
         controller: [
           '$scope',
           'user',
@@ -98,7 +99,7 @@ angular.module('demoApp').controller('demoController', [
         ],
         resolve: {
           user: [
-            function() {
+            function () {
               return {
                 firstName: 'Jerry'
               };
@@ -108,41 +109,41 @@ angular.module('demoApp').controller('demoController', [
       });
 
       panelInstance2.result
-        .then(function(result) {
+        .then(function (result) {
           console.log('panel was closed with result : ', result);
-        }).catch(function(error) {
+        }).catch(function (error) {
           console.log('panel was rejected with error : ', error);
         });
     };
 
     function modalController($scope, user) {
-      $scope.closePanel = function() {
+      $scope.closePanel = function () {
         $scope.$panelInstance.close('this is from the controller!!');
       };
 
-      $scope.dismissPanel = function() {
+      $scope.dismissPanel = function () {
         $scope.$panelInstance.dismiss('this is from the controller!!');
       };
 
-      $scope.openInnerPanel = function() {
+      $scope.openInnerPanel = function () {
         angularSlideOutPanel.open({
           template: template2,
           openOn: 'right',
           controller: [
             '$scope',
-            function($scope) {
-              $scope.closePanel = function() {
+            function ($scope) {
+              $scope.closePanel = function () {
                 $scope.$panelInstance.close('this is from the controller!!');
               };
 
-              $scope.openInnerPanel = function() {
+              $scope.openInnerPanel = function () {
                 angularSlideOutPanel.open({
                   template: template3,
                   openOn: 'right',
                   controller: [
                     '$scope',
-                    function($scope) {
-                      $scope.closePanel = function() {
+                    function ($scope) {
+                      $scope.closePanel = function () {
                         $scope.$panelInstance.close('this is from the controller!!');
                       };
                     }
