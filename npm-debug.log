@@ -1,0 +1,124 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/timofficer1/.nvm/versions/node/v6.9.0/bin/node',
+1 verbose cli   '/Users/timofficer1/.nvm/versions/node/v6.9.0/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@3.10.8
+3 info using node@v6.9.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   escapedName: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/timofficer1/Documents/code/js/tablelist/dev/angular-slideout-panel',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/timofficer1/.npm correctMkdir not in flight; initializing
+10 info lifecycle @tablelist/angular-slideout-panel@0.10.0~prepublish: @tablelist/angular-slideout-panel@0.10.0
+11 silly lifecycle @tablelist/angular-slideout-panel@0.10.0~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package.tgz',
+12 verbose tar pack   '/Users/timofficer1/Documents/code/js/tablelist/dev/angular-slideout-panel' ]
+13 verbose tarball /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package.tgz
+14 verbose folder /Users/timofficer1/Documents/code/js/tablelist/dev/angular-slideout-panel
+15 verbose addLocalTarball adding from inside cache /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package.tgz
+16 verbose correctMkdir /Users/timofficer1/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd @tablelist/angular-slideout-panel@0.10.0
+18 verbose afterAdd /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/timofficer1/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package/package.json written
+21 silly publish { name: '@tablelist/angular-slideout-panel',
+21 silly publish   version: '0.10.0',
+21 silly publish   description: 'Angular Slideout Panel',
+21 silly publish   main: 'gulpfile.js',
+21 silly publish   scripts: { test: 'npm test' },
+21 silly publish   repository: { type: 'git', url: 'git+https://github.com/n/a.git' },
+21 silly publish   keywords: [ 'angular', 'bootstrap', 'panels', 'modals' ],
+21 silly publish   author: { name: 'Tablelist' },
+21 silly publish   license: 'MIT',
+21 silly publish   bugs: { url: 'https://github.com/n/a/issues' },
+21 silly publish   homepage: 'https://github.com/n/a#readme',
+21 silly publish   dependencies: {},
+21 silly publish   devDependencies:
+21 silly publish    { 'babel-preset-es2015': '6.3.13',
+21 silly publish      bower: '1.7.7',
+21 silly publish      gulp: '3.9.1',
+21 silly publish      'gulp-babel': '6.1.1',
+21 silly publish      'gulp-clean-css': '^2.0.13',
+21 silly publish      'gulp-concat': '2.6.0',
+21 silly publish      'gulp-copy': '0.0.2',
+21 silly publish      'gulp-if': '1.2.4',
+21 silly publish      'gulp-inject': '1.5.0',
+21 silly publish      'gulp-jscs': '3.0.2',
+21 silly publish      'gulp-jshint': '1.11.2',
+21 silly publish      'gulp-rename': '^1.2.2',
+21 silly publish      'gulp-uglify': '1.5.3',
+21 silly publish      'gulp-util': '3.0.7',
+21 silly publish      'jshint-stylish': '2.0.1',
+21 silly publish      'run-sequence': '1.1.5' },
+21 silly publish   readme: '# [Angular Slideout Panel](https://tablelist.github.io/angular-slideout-panel/)\n\n[![Bower version](https://badge.fury.io/bo/angular-slideout-package.svg)](https://badge.fury.io/bo/angular-slideout-package)\n\n### Getting Started\n1) Install via Bower\n``` bash\nbower install angular-slideout-panel --save\n```\n\n2) Add JS and CSS\n``` bash\n<script src="bower_components/angular-slideout-panel/release/js/angular-slideout-panel.min.js"></script>\n\n<link rel="stylesheet" href="bower_components/angular-slideout-panel/release/css/angular-slideout-panel.min.css">\n```\n\n3) Add Angular Dependency\n``` js\nangular.module(\'demoApp\', [\n  \'angular-slideout-panel\'\n]);\n```\n\n### Usage\n\n``` js\nangular.module(\'demoApp\').controller(\'demoCtrl\', [\n  \'$scope\',\n  \'angularSlideOutPanel\',\n  function($scope, angularSlideOutPanel) {\n    $scope.openPanel = function() {\n      angularSlideOutPanel.open({\n        template: template,\n        openOn: \'left\',\n        controller: [\n          \'$scope\',\n          \'user\',\n          modalController\n        ],\n        resolve: {\n          user: [\n            function() {\n              return {\n                firstName: \'Jerry\'\n              };\n            }\n          ]\n        }\n      });\n    };\n\n    function modalController($scope, user) {\n      $scope.closePanel = function() {\n        $scope.$panelInstance.close(\'this is from the controller!!\');\n      };\n\n      $scope.dismissPanel = function() {\n        $scope.$panelInstance.dismiss(\'this is from the controller!!\');\n      };\n\n      $scope.user = user;\n    }\n  }\n]);\n```\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: 'd03d39fcb6c2a89259f2d7ef9aa1ea8a811e1a6c',
+21 silly publish   _id: '@tablelist/angular-slideout-panel@0.10.0',
+21 silly publish   _shasum: '5db7d9246fd432821640bc196fd0f92ef1ca077f',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name @tablelist/angular-slideout-panel
+24 silly mapToRegistry scope (from package name) @tablelist
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: '@tablelist/angular-slideout-panel',
+26 silly mapToRegistry   scope: '@tablelist',
+26 silly mapToRegistry   escapedName: '@tablelist%2fangular-slideout-panel',
+26 silly mapToRegistry   name: '@tablelist/angular-slideout-panel',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/@tablelist%2fangular-slideout-panel
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading /Users/timofficer1/.npm/@tablelist/angular-slideout-panel/0.10.0/package.tgz
+30 verbose request uri https://registry.npmjs.org/@tablelist%2fangular-slideout-panel
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 9:29:33 AM
+33 verbose request using bearer token for auth
+34 verbose request id 1be1d8c0cae5cba7
+35 http request PUT https://registry.npmjs.org/@tablelist%2fangular-slideout-panel
+36 http 403 https://registry.npmjs.org/@tablelist%2fangular-slideout-panel
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=0',
+37 verbose headers   'content-length': '21',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Wed, 05 Apr 2017 13:29:34 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-bos8227-BOS',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1491398973.374870,VS0,VE1015' }
+38 verbose request invalidating /Users/timofficer1/.npm/registry.npmjs.org/_40tablelist_252fangular-slideout-panel on PUT
+39 error publish Failed PUT 403
+40 verbose stack Error: Forbidden : @tablelist/angular-slideout-panel
+40 verbose stack     at makeError (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:302:12)
+40 verbose stack     at CachingRegistryClient.<anonymous> (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:290:14)
+40 verbose stack     at Request._callback (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:210:14)
+40 verbose stack     at Request.self.callback (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/request/request.js:187:22)
+40 verbose stack     at emitTwo (events.js:106:13)
+40 verbose stack     at Request.emit (events.js:191:7)
+40 verbose stack     at Request.<anonymous> (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/request/request.js:1044:10)
+40 verbose stack     at emitOne (events.js:96:13)
+40 verbose stack     at Request.emit (events.js:188:7)
+40 verbose stack     at IncomingMessage.<anonymous> (/Users/timofficer1/.nvm/versions/node/v6.9.0/lib/node_modules/npm/node_modules/request/request.js:965:12)
+41 verbose statusCode 403
+42 verbose pkgid @tablelist/angular-slideout-panel
+43 verbose cwd /Users/timofficer1/Documents/code/js/tablelist/dev/angular-slideout-panel
+44 error Darwin 15.6.0
+45 error argv "/Users/timofficer1/.nvm/versions/node/v6.9.0/bin/node" "/Users/timofficer1/.nvm/versions/node/v6.9.0/bin/npm" "publish"
+46 error node v6.9.0
+47 error npm  v3.10.8
+48 error code E403
+49 error Forbidden : @tablelist/angular-slideout-panel
+50 error If you need help, you may report this error at:
+50 error     <https://github.com/npm/npm/issues>
+51 verbose exit [ 1, true ]
