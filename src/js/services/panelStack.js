@@ -28,7 +28,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanelStack', [
         return this._stack.length;
       }
 
-      clearAll() {
+      dismissAll() {
         angular.forEach(this._stack, panel => {
           $timeout(() => {
             panel.close();
