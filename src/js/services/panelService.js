@@ -191,6 +191,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       if (options.panelClass) modalBgElement.addClass(options.panelClass);
       if ('backdrop' in options) {
         if (options.backdrop === false) modalBgElement.addClass(`${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}-hidden`);
+        if (options.backdrop === 'static') modalBgElement.addClass(`${PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT}-static`);
       }
 
       let modalDialogElement = angular.element(document.createElement('div'));
@@ -226,6 +227,7 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
     /**
      * @param {Object} [options]
      * @param {String} [options.openOn] - direction to open the panel
+     * @param {String} [options.backdrop] - true|false|'static'
      */
     function getOrCreateModalBgElement(options) {
       options = options || {};
@@ -241,9 +243,12 @@ angular.module('angular-slideout-panel').service('angularSlideOutPanel', [
       }
 
       modalBgElement.addClass(PANEL_ELEMENT_CLASSES.PANEL_BG_ELEMENT);
-      modalBgElement.on('click', () => { //close the modal on backgroup clicks
-        if (options.dismiss) options.dismiss(PANEL_CLICK_EVENTS.BACKDROP_CLICK);
-      });
+
+      if (options.backdrop !== 'static') {
+        modalBgElement.on('click', () => { //close the modal on backgroup clicks
+          if (options.dismiss) options.dismiss(PANEL_CLICK_EVENTS.BACKDROP_CLICK);
+        });
+      }
 
       bodyElement.on('keydown keypress', event => { //close the modal on escape keypress
         if (event.which === 27) { // 27 = esc key

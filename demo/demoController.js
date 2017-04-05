@@ -91,7 +91,7 @@ angular.module('demoApp').controller('demoController', [
       var panelInstance2 = angularSlideOutPanel.open({
         template: template1,
         openOn: 'right',
-        backdrop: false,
+        backdrop: 'static',
         controller: [
           '$scope',
           'user',

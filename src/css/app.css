@@ -23,6 +23,10 @@
   background: none !important;
 }
 
+.angular-panel-bg-static::after {
+  cursor: default !important;
+}
+
 .angular-panel-bg::after {
   content: '';
   /* overlay layer */
