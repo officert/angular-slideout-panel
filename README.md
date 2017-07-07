@@ -1,4 +1,4 @@
-# [Angular Slideout Panel](https://tablelist.github.io/angular-slideout-panel/)
+# [Angular Slideout Panel](https://officert.github.io/angular-slideout-panel/)
 
 [![Bower version](https://badge.fury.io/bo/angular-slideout-package.svg)](https://badge.fury.io/bo/angular-slideout-package)
 
