@@ -2,7 +2,10 @@
   "name": "angular-slideout-panel",
   "version": "0.10.1",
   "description": "Angular Slideout Panel",
-  "main": "gulpfile.js",
+  "main": [
+    "release/js/angular-slideout-panel.min.js",
+    "release/css/angular-slideout-panel.min.css"
+  ],
   "authors": [
     "Tablelist"
   ],
